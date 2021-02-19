@@ -1,4 +1,5 @@
 ﻿using Material.Entity;
+using Material.Entity.Config;
 using Material.MySQL;
 using Material.Redis;
 using System;
@@ -21,19 +22,19 @@ namespace Make.Repository
             this.redis = redis;
             this.mySQL = mySQL;
         }
-        public async Task<bool> Insert(Config config)
+        public async Task<bool> Insert(PlayerServerConfig config)
         {
             return await mySQL.configDao.Insert(config);
         }
-        public async Task<bool> Update(Config config)
+        public async Task<bool> Update(PlayerServerConfig config)
         {
             return await mySQL.configDao.Update(config);
         }
-        public async Task<Config> Query(Config.ConfigCategory category)
+        public async Task<PlayerServerConfig> Query(PlayerServerConfig.PlayerServerCategory category)
         {
             return await mySQL.configDao.Query(category);
         }
-        public async Task<bool> Delete(Config.ConfigCategory category)
+        public async Task<bool> Delete(PlayerServerConfig.PlayerServerCategory category)
         {
             return await mySQL.configDao.Delete(category);
         }

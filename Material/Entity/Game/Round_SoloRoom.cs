@@ -1,7 +1,7 @@
 ﻿using Material.Entity;
 using System;
 
-namespace Make.Model.GameModel
+namespace Material.Entity.Game
 {
     public class Round_SoloRoom : Room
     {

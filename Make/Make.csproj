@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Material\Material.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="RPC\Request\" />
+  </ItemGroup>
+
 </Project>

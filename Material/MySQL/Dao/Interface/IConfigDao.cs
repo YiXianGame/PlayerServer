@@ -1,4 +1,5 @@
 ﻿using Material.Entity;
+using Material.Entity.Config;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,9 @@ namespace Material.MySQL.Dao.Interface
 {
     public interface IConfigDao
     {
-        Task<bool> Insert(Config config);
-        Task<bool> Delete(Config.ConfigCategory category);
-        Task<bool> Update(Config config);
-        Task<Config> Query(Config.ConfigCategory category);
+        Task<bool> Insert(PlayerServerConfig config);
+        Task<bool> Delete(PlayerServerConfig.PlayerServerCategory category);
+        Task<bool> Update(PlayerServerConfig config);
+        Task<PlayerServerConfig> Query(PlayerServerConfig.PlayerServerCategory category);
     }
 }

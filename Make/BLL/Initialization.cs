@@ -26,17 +26,17 @@ namespace Make.BLL
             serverType.Add<string>("string");
             serverType.Add<bool>("bool");
             serverType.Add<long>("long");
-            serverType.Add<User>("user");
+            serverType.Add<Material.Entity.User>("user");
             serverType.Add<SkillCard>("skillCard");
             serverType.Add<List<SkillCard>>("skillCards");
             serverType.Add<List<CardItem>>("cardItem");
             serverType.Add<List<CardGroup>>("cardGroups");
             serverType.Add<List<Friend>>("friends");
-            serverType.Add<List<User>>("users");
+            serverType.Add<List<Material.Entity.User>>("users");
             //适配Server远程客户端服务
             Material.RPCServer.RPCAdaptFactory.Register<PlayerServerAdapt>("PlayerServer", "192.168.0.105", "28016", serverType);
             //启动Server服务
-            RPCNetServerFactory.StartServer("192.168.0.105", "28016", () => new UserToken());
+            RPCNetServerFactory.StartServer("192.168.0.105", "28016", () => new Model.User());
             #endregion
             Console.WriteLine("Initialization Sucess!");
         }

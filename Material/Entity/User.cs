@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Material.RPCServer.TCP_Async_Event;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 
 namespace Material.Entity
 {
     [JsonObject(MemberSerialization.OptOut)]
-    public class User
+    public class User:BaseUserToken
     {
         #region --Enum--
         [JsonConverter(typeof(StringEnumConverter))]
@@ -87,6 +88,9 @@ namespace Material.Entity
         public List<CardGroup> CardGroups { get => cardGroups; set => cardGroups = value; }
         public long Friend_update { get => friend_update; set => friend_update = value; }
         public long CardGroups_update { get => cardGroups_update; set => cardGroups_update = value; }
+        public override object Key { get => id; set => id = (long)value; }
+
         #endregion
+
     }
 }

@@ -5,9 +5,7 @@ using Material.Redis;
 using Material.Utils;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using static Material.Entity.User;
 
 namespace Make.Repository
 {
@@ -139,7 +137,7 @@ namespace Make.Repository
             }
             else return -1;
         }
-        public async Task<long> Update_State(long id,UserState state)
+        public async Task<long> Update_State(long id,User.UserState state)
         {
             long timestamp = TimeStamp.Now();
             bool result = await mySQL.userDao.Update_State(id, state, timestamp);

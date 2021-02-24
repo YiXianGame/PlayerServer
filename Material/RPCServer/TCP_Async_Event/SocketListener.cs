@@ -88,7 +88,7 @@ namespace Material.RPCServer.TCP_Async_Event
             e.AcceptSocket.Dispose();
             e.AcceptSocket = null;
             this.semaphoreAcceptedClients.Release();
-            tokens.TryRemove((e.UserToken as DataToken).Token.GetKey(),out BaseUserToken value);
+            tokens.TryRemove((e.UserToken as DataToken).Token.Key,out BaseUserToken value);
             (e.UserToken as DataToken).DisConnect();
             this.readWritePool.Push(e);
             Interlocked.Decrement(ref this.numConnectedSockets);

@@ -27,12 +27,12 @@ namespace Material.MySQL.Dao
             GetConnection(out MySqlConnection connection);
             try
             {
-                string sqlcommand = "INSERT INTO player_server(category,ip,port,token) VALUES(@category,@ip,@port,@token)";
+                string sqlcommand = "INSERT INTO player_server(category,ip,port,secret_key) VALUES(@category,@ip,@port,@secret_key)";
                 List<MySqlParameter> parameters = new List<MySqlParameter>();
                 parameters.Add(new MySqlParameter("@category", config.Category.ToString()));
                 parameters.Add(new MySqlParameter("@ip", config.Ip));
                 parameters.Add(new MySqlParameter("@port", config.Port));
-                parameters.Add(new MySqlParameter("@token", config.Token));
+                parameters.Add(new MySqlParameter("@secret_key", config.SecretKey));
                 int result = await MySqlHelper.ExecuteNonQueryAsync(connection, sqlcommand, parameters.ToArray());
                 if (result == 1)
                 {
@@ -70,12 +70,12 @@ namespace Material.MySQL.Dao
             GetConnection(out MySqlConnection connection);
             try
             {
-                string sqlcommand = "UPDATE player_server SET ip=@ip,port=@port,token=@token WHERE category=@category";
+                string sqlcommand = "UPDATE player_server SET ip=@ip,port=@port,secret_key=@secret_key WHERE category=@category";
                 List<MySqlParameter> parameters = new List<MySqlParameter>();
                 parameters.Add(new MySqlParameter("@category", config.Category.ToString()));
                 parameters.Add(new MySqlParameter("@ip", config.Ip));
                 parameters.Add(new MySqlParameter("@port", config.Port));
-                parameters.Add(new MySqlParameter("@token", config.Token));
+                parameters.Add(new MySqlParameter("@secret_key", config.SecretKey));
                 int result = await MySqlHelper.ExecuteNonQueryAsync(connection, sqlcommand, parameters.ToArray());
                 if (result == 1)
                 {
@@ -93,7 +93,7 @@ namespace Material.MySQL.Dao
             GetConnection(out MySqlConnection connection);
             try
             {
-                string sqlcommand = "SELECT ip,port,token FROM player_server WHERE category=@category";
+                string sqlcommand = "SELECT ip,port,secret_key FROM player_server WHERE category=@category";
                 List<MySqlParameter> parameters = new List<MySqlParameter>();
                 parameters.Add(new MySqlParameter("@category", category.ToString()));
 
@@ -104,7 +104,7 @@ namespace Material.MySQL.Dao
                     config.Category = category;
                     config.Ip = reader.GetString("ip");
                     config.Port = reader.GetString("port");
-                    config.Token = reader.GetString("token");
+                    config.SecretKey = reader.GetString("secret_key");
                     return config;
                 }
                 else return null;

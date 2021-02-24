@@ -10,7 +10,7 @@ namespace Material.RPCServer.TCP_Async_Event
     public sealed class DataToken
     {
         #region --User_Cutsom--
-        private BaseUserToken token;
+        private BaseUserToken secret_key;
         #endregion
         private SocketAsyncEventArgs eventArgs;
         private DotNetty.Buffers.IByteBuffer content;
@@ -28,7 +28,7 @@ namespace Material.RPCServer.TCP_Async_Event
         private static byte pattern;
         private static byte[] future = new byte[futuresize];
 
-        public BaseUserToken Token  { get => token; set => token = value; }
+        public BaseUserToken Token  { get => secret_key; set => secret_key = value; }
         public string Hostname { get => hostname; set => hostname = value; }
         public string Port { get => port; set => port = value; }
 
@@ -42,14 +42,14 @@ namespace Material.RPCServer.TCP_Async_Event
         public void DisConnect()
         {
             content.ResetWriterIndex();
-            token.OnDisConnect();
-            token = null;
+            secret_key.OnDisConnect();
+            secret_key = null;
         }
-        public void Connect(BaseUserToken token)
+        public void Connect(BaseUserToken secret_key)
         {
             content.ResetWriterIndex();
-            this.token = token;
-            token.OnConnect();
+            this.secret_key = secret_key;
+            secret_key.OnConnect();
         }
         public void ProcessData()
         {
@@ -86,11 +86,11 @@ namespace Material.RPCServer.TCP_Async_Event
                                 Console.WriteLine($"{DateTime.Now}::{Hostname}:{Port}::[客-请求]\n{request}");
                                 Console.WriteLine("--------------------------------------------------");
 #endif
-                                request.Params[0] = token;
+                                request.Params[0] = secret_key;
                                 object result = method.Invoke(null, request.Params);
                                 string type = "null";
                                 if(result!=null)proxy.Type.TypeToAbstract.TryGetValue(result.GetType(),out type);
-                                token.Send(new ClientResponseModel("2.0",JsonConvert.SerializeObject(result),type, new Error(), request.Id));
+                                secret_key.Send(new ClientResponseModel("2.0",JsonConvert.SerializeObject(result),type, new Error(), request.Id));
                             }
                             else
                             {

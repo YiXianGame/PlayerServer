@@ -1,9 +1,9 @@
-﻿using Material.RPCServer.TCP_Async_Event;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
+using Material.RPCServer.TCP_Async_Event;
 
 namespace Material.RPCServer
 {
@@ -38,9 +38,10 @@ namespace Material.RPCServer
                     }   
                     socketservers[key] = socketserver;
                 }
-                catch (SocketException err)
+                catch (SocketException e)
                 {
                     Console.WriteLine("发生异常报错,销毁注册");
+                    Console.WriteLine(e.Message + "\n" + e.StackTrace);
                     socketserver.Dispose();
                 }
             }

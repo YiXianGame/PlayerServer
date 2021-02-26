@@ -33,7 +33,7 @@ namespace Make.BLL
             serverType.Add<List<Friend>>("friends");
             serverType.Add<List<User>>("users");
             //适配Server远程客户端服务
-            Material.RPCServer.RPCAdaptFactory.Register<PlayerServerAdapt>("PlayerServer", "192.168.0.105", "28016", serverType);
+            Material.RPCServer.RPCAdaptFactory.Register<PlayerServerAdapt>(new PlayerServerAdapt(),"PlayerServer", "192.168.0.105", "28016", serverType);
             //启动Server服务
             RPCNetServerFactory.StartServer("192.168.0.105", "28016", () => new User());
             #endregion

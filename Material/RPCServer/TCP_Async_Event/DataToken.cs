@@ -10,7 +10,7 @@ namespace Material.RPCServer.TCP_Async_Event
     public sealed class DataToken
     {
         #region --User_Cutsom--
-        private BaseUserToken secret_key;
+        private BaseUserToken token;
         #endregion
         private SocketAsyncEventArgs eventArgs;
         private DotNetty.Buffers.IByteBuffer content;
@@ -28,7 +28,7 @@ namespace Material.RPCServer.TCP_Async_Event
         private static byte pattern;
         private static byte[] future = new byte[futuresize];
 
-        public BaseUserToken Token  { get => secret_key; set => secret_key = value; }
+        public BaseUserToken Token  { get => token; set => token = value; }
         public string Hostname { get => hostname; set => hostname = value; }
         public string Port { get => port; set => port = value; }
 
@@ -42,14 +42,16 @@ namespace Material.RPCServer.TCP_Async_Event
         public void DisConnect()
         {
             content.ResetWriterIndex();
-            secret_key.OnDisConnect();
-            secret_key = null;
+            token.OnDisConnect();
+            token = null;
         }
-        public void Connect(BaseUserToken secret_key)
+        public void Connect(BaseUserToken token,Socket socket)
         {
             content.ResetWriterIndex();
-            this.secret_key = secret_key;
-            secret_key.OnConnect();
+            this.token = token;
+            token.Socket = socket;
+            token.ServerKey = new Tuple<string, string>(hostname, port);
+            token.OnConnect();
         }
         public void ProcessData()
         {
@@ -86,11 +88,11 @@ namespace Material.RPCServer.TCP_Async_Event
                                 Console.WriteLine($"{DateTime.Now}::{Hostname}:{Port}::[客-请求]\n{request}");
                                 Console.WriteLine("--------------------------------------------------");
 #endif
-                                request.Params[0] = secret_key;
-                                object result = method.Invoke(null, request.Params);
+                                request.Params[0] = token;
+                                object result = method.Invoke(proxy.Instance, request.Params);
                                 string type = "null";
-                                if(result!=null)proxy.Type.TypeToAbstract.TryGetValue(result.GetType(),out type);
-                                secret_key.Send(new ClientResponseModel("2.0",JsonConvert.SerializeObject(result),type, new Error(), request.Id));
+                                if(result!=null)proxy.Type.AbstractName.TryGetValue(result.GetType(),out type);
+                                token.Send(new ClientResponseModel("2.0",JsonConvert.SerializeObject(result),type, new Error(), request.Id));
                             }
                             else
                             {
@@ -99,7 +101,7 @@ namespace Material.RPCServer.TCP_Async_Event
                                 Console.WriteLine($"{DateTime.Now}::{Hostname}:{Port}::[客-指令]\n{request}");
                                 Console.WriteLine("--------------------------------------------------");
 #endif
-                                request.Params[0] = this;
+                                request.Params[0] = token;
                                 method.Invoke(null, request.Params);
                             }
                         }

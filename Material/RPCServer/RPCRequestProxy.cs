@@ -23,7 +23,7 @@ namespace Material.RPCServer
 
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
-            RPCMethod rpcAttribute = targetMethod.GetCustomAttribute<RPCMethod>();
+            RPCRequest rpcAttribute = targetMethod.GetCustomAttribute<RPCRequest>();
             if (rpcAttribute != null)
             {
                 //这里要连接字符串，发现StringBuilder效率高一些.
@@ -76,7 +76,7 @@ namespace Material.RPCServer
                     (args[0] as BaseUserToken).Send(request);
                     return null;
                 }
-                else throw new RPCException($"方法体:{methodid} 执行时，缺少首参数BaseUserToken，请检查是否传参错误！");
+                else return null;// throw new RPCException($"方法体:{methodid} 执行时，缺少首参数BaseUserToken，请检查是否传参错误！");
             }
             else return targetMethod.Invoke(this, args);
         }

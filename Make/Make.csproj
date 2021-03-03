@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="RPC\Request\**" />
+    <EmbeddedResource Remove="RPC\Request\**" />
+    <None Remove="RPC\Request\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Core.cs" />
   </ItemGroup>
 
@@ -14,10 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Material\Material.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="RPC\Request\" />
   </ItemGroup>
 
 </Project>

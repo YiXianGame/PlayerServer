@@ -21,30 +21,15 @@ namespace Model.GameModel.GameRoom
         {
             if (SecretKey.Equals(roomSecretKey))
             {
-                if (RedTeam.ContainsKey(player.Id))
+                foreach(Team team in Teams)
                 {
-                    RedTeam.Remove(player.Id);
-                    RedTeam.Add(player.Id, player);
+                    if (team.Teammates.ContainsKey(player.Id))
+                    {
+                        team.Teammates.Remove(player.Id);
+                        team.Teammates.Add(player.Id,player);
+                        
+                    }
                 }
-                else
-                {
-                    BlueTeam.Remove(player.Id);
-                    BlueTeam.Add(player.Id, player);
-                }
-                bool flag = true;
-                foreach(Player item in RedTeam.Values)
-                {
-                    if (item == null) flag = false;
-                }
-                foreach (Player item in BlueTeam.Values)
-                {
-                    if (item == null) flag = false;
-                }
-                if (flag)
-                {
-                    Start_Stage();
-                }
-                return true;
             }
             return false;
         }

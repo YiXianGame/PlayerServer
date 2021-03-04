@@ -1,5 +1,4 @@
-﻿using Make.Model.GameModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Material.Entity
@@ -9,9 +8,9 @@ namespace Material.Entity
         public enum RoomType { Round_Solo, Round_Team, Round_BattleRoyale, RealTime_Solo, RealTime_Team, RealTime_BattleRoyale };
         public enum RoomStage { Wait, Raise, Action, Result };
         #region --字段--
+        protected string id;
         protected int time = 0;//房间时间
-        protected Dictionary<long, Player> redTeam = new Dictionary<long, Player>();//房间内的玩家
-        protected Dictionary<long, Player> blueTeam = new Dictionary<long, Player>();//房间内的玩家
+        private HashSet<Team> teams = new HashSet<Team>();
         protected RoomStage stage = RoomStage.Wait;//房间阶段
         protected RoomType type = RoomType.Round_Solo;//房间类型
         protected int deaths = 0;//死亡总数
@@ -29,16 +28,12 @@ namespace Material.Entity
         public int Max_players { get => max_players; set => max_players = value; }
         public int Min_players { get => min_players; set => min_players = value; }
         public int Time { get => time; set => time = value; }
-        public Dictionary<long, Player> RedTeam { get => redTeam; set => redTeam = value; }
-        public Dictionary<long, Player> BlueTeam { get => blueTeam; set => blueTeam = value; }
         public string SecretKey { get => secretKey; set => secretKey = value; }
+        public string Id { get => id; set => id = value; }
+        protected HashSet<Team> Teams { get => teams; set => teams = value; }
         #endregion
 
         #region --方法--
-        public Room()
-        {
-            SecretKey = Utils.SecretKey.Generate(10);
-        }
         public abstract void Start_Stage();
         public abstract void Action_Stage();
         public abstract void Raise_Stage();

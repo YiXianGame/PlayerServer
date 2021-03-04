@@ -20,22 +20,17 @@ namespace Make.BLL
             Core.Repository = repository;
             CoreInit(PlayerServerConfig.PlayerServerCategory.StandardServer);
             #region --RPCServer--
-            Material.RPCServer.RPCType serverType = new Material.RPCServer.RPCType();
-            serverType.Add<int>("int");
-            serverType.Add<string>("string");
-            serverType.Add<bool>("bool");
-            serverType.Add<long>("long");
-            serverType.Add<User>("user");
-            serverType.Add<SkillCard>("skillCard");
-            serverType.Add<List<SkillCard>>("skillCards");
-            serverType.Add<List<CardItem>>("cardItem");
-            serverType.Add<List<CardGroup>>("cardGroups");
-            serverType.Add<List<Friend>>("friends");
-            serverType.Add<List<User>>("users");
+            RPCType serverType = new RPCType();
+            serverType.Add<int>("Int");
+            serverType.Add<string>("String");
+            serverType.Add<bool>("Bool");
+            serverType.Add<long>("Long");
+            serverType.Add<CardGroup>("CardGroup");
+            serverType.Add<List<Team>>("List<Team>");
             //适配Server远程客户端服务
-            Material.RPCServer.RPCAdaptFactory.Register<PlayerServerAdapt>(new PlayerServerAdapt(),"PlayerServer", "192.168.0.105", "28016", serverType);
+            RPCServiceFactory.Register(new PlayerServerAdapt(),"PlayerServer", "192.168.0.105", "28016", serverType);
             //启动Server服务
-            RPCNetServerFactory.StartServer("192.168.0.105", "28016", () => new User());
+            RPCNetServerFactory.StartServer("192.168.0.105", "28016", () => new Player());
             #endregion
             Console.WriteLine("Initialization Sucess!");
         }

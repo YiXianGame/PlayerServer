@@ -1,6 +1,4 @@
-﻿
-using Make.Model.GameModel;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 

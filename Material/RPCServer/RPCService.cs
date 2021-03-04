@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Material.RPCServer
 {
-    public class RPCAdaptProxy
+    public class RPCService
     {
         //原作者的思想是Type调用Invoke，这里是在注册的时候就预存方法，1e6情况下调用速度的话是快了4-5倍左右，比正常调用慢10倍
         //猜测类似C++函数指针可能会更快,C#.NET理念下函数指针只能用委托替代，但委托自由度不高.
@@ -25,7 +25,7 @@ namespace Material.RPCServer
             StringBuilder methodid = new StringBuilder();
             foreach (MethodInfo method in typeof(T).GetMethods())
             {
-                RPCAdapt rpcAttribute = method.GetCustomAttribute<RPCAdapt>();
+                Annotation.RPCService rpcAttribute = method.GetCustomAttribute<Annotation.RPCService>();
                 if (rpcAttribute != null)
                 {
                     if (!method.IsAbstract)
@@ -53,7 +53,7 @@ namespace Material.RPCServer
                         }
                         else
                         {
-                            string[] types_name = rpcAttribute.Paramters.Split('-');
+                            string[] types_name = rpcAttribute.Paramters;
                             if(parameters.Length == types_name.Length)
                             {
                                 //跳过第一个参数Token，本来打算让客户端加上这个参数，但是分析后觉得代码不够友好，还节省资源.

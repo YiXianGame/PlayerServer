@@ -1,9 +1,11 @@
-﻿using Make.RPC.Adapt;
+﻿using Make.RPC.Service;
 using Material.Entity;
 using Material.Entity.Config;
+using Material.EtherealS.Model;
+using Material.EtherealS.Net;
+using Material.EtherealS.Service;
 using Material.MySQL;
 using Material.Redis;
-using Material.RPCServer;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +16,7 @@ namespace Make.BLL
         public Initialization()
         {
             Console.WriteLine("Initialization....");
-            Redis redis = new Redis("127.0.0.1:6379");
+            Redis redis = new Redis("127.0.0.1 : 6379");
             MySQL mySQL = new MySQL("127.0.0.1", "3306", "yixian", "root", "root");
             Model.Repository repository = new Model.Repository(redis, mySQL);
             Core.Repository = repository;
@@ -28,9 +30,10 @@ namespace Make.BLL
             serverType.Add<CardGroup>("CardGroup");
             serverType.Add<List<Team>>("List<Team>");
             //适配Server远程客户端服务
-            RPCServiceFactory.Register(new PlayerServerAdapt(),"PlayerServer", "192.168.0.105", "28016", serverType);
+            RPCServiceFactory.Register(new PlayerServerService(),"PlayerServer", "192.168.0.105", "28016", new RPCNetServiceConfig(serverType));
             //启动Server服务
-            RPCNetServerFactory.StartServer("192.168.0.105", "28016", () => new Player());
+            RPCNetConfig serverNetConfig = new RPCNetConfig(() => new Player());
+            RPCNetFactory.StartServer("192.168.80.1", "28015", serverNetConfig);
             #endregion
             Console.WriteLine("Initialization Sucess!");
         }

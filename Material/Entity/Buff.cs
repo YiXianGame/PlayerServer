@@ -15,7 +15,7 @@ namespace Material.Entity
         private int duration;//持续时长
         private int power;//作用范围
         private BuffCategory category = BuffCategory.Freeze;
-        private Player owner;//Buff拥有者
+        private User owner;//Buff拥有者
         private long expire;//到期时间
         private bool isExpire;//到期时间
         #endregion
@@ -25,7 +25,7 @@ namespace Material.Entity
         public int Power { get => power; set => power = value; }
         public BuffCategory Category { get => category; set => category = value; }
         [JsonIgnore]
-        public Player Owner { get => owner; set => owner = value; }
+        public User Owner { get => owner; set => owner = value; }
         [JsonIgnore]
         public long Expire { get => expire; set => expire = value; }
         [JsonIgnore]

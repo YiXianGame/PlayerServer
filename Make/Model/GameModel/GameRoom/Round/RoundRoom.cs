@@ -1,4 +1,4 @@
-﻿using Make.Model.GameModel;
+﻿using Make;
 using Material.Entity;
 using System;
 using System.Collections.Generic;
@@ -14,49 +14,63 @@ namespace Model.GameModel.GameRoom
 
         public override void Action_Stage()
         {
-            throw new NotImplementedException();
+            stage = RoomStage.Action;
         }
 
-        public override bool Enter(Player player,string roomSecretKey)
+        public override bool Enter(Player player)
         {
-            if (SecretKey.Equals(roomSecretKey))
+            if (stage == RoomStage.Wait)
             {
-                foreach(Team team in Teams)
+                player.Hp = Hp_max;
+                player.Mp = 0;
+                player.Buffs = new List<Buff>();
+                readyCount++;
+                if(readyCount >= min_players)
                 {
-                    if (team.Teammates.ContainsKey(player.Id))
-                    {
-                        team.Teammates.Remove(player.Id);
-                        team.Teammates.Add(player.Id,player);
-                        
-                    }
+                    Core.LoadRequest.StartGame(player,teams);
+                    Start_Stage();
                 }
             }
-            return false;
+            else
+            {
+                Core.LoadRequest.StartGame(player,teams);
+            }
+            return true;
         }
 
         public override bool Force_Close()
         {
-            throw new NotImplementedException();
+            teams.ForEach((item) =>
+            {
+                item.Foreach(player => Leave(player));
+            });
+            return true;
         }
 
         public override bool Leave(Player player)
         {
-            throw new NotImplementedException();
+            player.Hp = 0;
+            player.Mp = 0;
+            player.Buffs = null;
+            player.CardGroup = null;
+            player.Team = null;
+            player.Room = null;
+            return true;
         }
 
         public override void Raise_Stage()
         {
-            throw new NotImplementedException();
+            stage = RoomStage.Raise;
         }
 
         public override void Result_Stage()
         {
-            throw new NotImplementedException();
+            stage = RoomStage.Result;
         }
 
         public override void Start_Stage()
         {
-            throw new NotImplementedException();
+            stage = RoomStage.Start;
         }
     }
 }

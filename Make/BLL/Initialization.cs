@@ -1,13 +1,18 @@
-﻿using Make.RPC.Service;
+﻿using Make.RPC.Request;
+using Make.RPC.Service;
 using Material.Entity;
 using Material.Entity.Config;
+using Material.EtherealS.Annotation;
+using Material.EtherealS.Extension.Authority;
 using Material.EtherealS.Model;
 using Material.EtherealS.Net;
+using Material.EtherealS.Request;
 using Material.EtherealS.Service;
 using Material.MySQL;
 using Material.Redis;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Make.BLL
 {
@@ -16,7 +21,7 @@ namespace Make.BLL
         public Initialization()
         {
             Console.WriteLine("Initialization....");
-            Redis redis = new Redis("127.0.0.1 : 6379");
+            Redis redis = new Redis("127.0.0.1:6379");
             MySQL mySQL = new MySQL("127.0.0.1", "3306", "yixian", "root", "root");
             Model.Repository repository = new Model.Repository(redis, mySQL);
             Core.Repository = repository;
@@ -27,17 +32,25 @@ namespace Make.BLL
             serverType.Add<string>("String");
             serverType.Add<bool>("Bool");
             serverType.Add<long>("Long");
+            serverType.Add<Player>("Player");   
             serverType.Add<CardGroup>("CardGroup");
             serverType.Add<List<Team>>("List<Team>");
+            RPCNetServiceConfig serviceConfig = new RPCNetServiceConfig(serverType);
+            RPCNetRequestConfig requestConfig = new RPCNetRequestConfig(serverType);
             //适配Server远程客户端服务
-            RPCServiceFactory.Register(new PlayerServerService(),"PlayerServer", "192.168.0.105", "28016", new RPCNetServiceConfig(serverType));
+            serviceConfig.Authoritable = true;
+            RPCServiceFactory.Register(new PlayerServerService(),"PlayerServer", Core.Config.Ip, Core.Config.Port, serviceConfig);
+            //配置Request远程客户端请求
+            RPCNetRequestFactory.Register<LoadRequest>("RequestClient", Core.Config.Ip, Core.Config.Port, requestConfig);
             //启动Server服务
             RPCNetConfig serverNetConfig = new RPCNetConfig(() => new Player());
-            RPCNetFactory.StartServer("192.168.80.1", "28015", serverNetConfig);
+            RPCNetFactory.StartServer(Core.Config.Ip,Core.Config.Port, serverNetConfig);
+            serverNetConfig.InterceptorEvent += AuthorityCheck.ServiceCheck;
             #endregion
+            SkillCardInit();
             Console.WriteLine("Initialization Sucess!");
         }
-
+        
         private async void CoreInit(PlayerServerConfig.PlayerServerCategory category)
         {
             Console.WriteLine("Core Loading....");
@@ -62,6 +75,17 @@ namespace Make.BLL
             }
             else Core.Config = config;
             Console.WriteLine("Core Load Sucess!");
+        }
+
+        public async void SkillCardInit()
+        {
+            Console.WriteLine("SkillCard Loading....");
+            List<SkillCard> skillCards = await Core.Repository.SkillCardRepository.Query_All();
+            foreach (SkillCard item in skillCards)
+            {
+                Core.SkillCards.Add(item.Id, item);
+            }
+            Console.WriteLine("SkillCard Load Success!");
         }
     }
 }

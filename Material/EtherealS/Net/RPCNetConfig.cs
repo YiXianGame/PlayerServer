@@ -39,11 +39,15 @@ namespace Material.EtherealS.Net
         }
         public bool OnInterceptor(RPCNetService service,MethodInfo method,BaseUserToken token)
         {
-            foreach(InterceptorDelegate item in InterceptorEvent.GetInvocationList())
+            if (InterceptorEvent != null)
             {
-                if (!item.Invoke(service, method, token)) return false;
+                foreach (InterceptorDelegate item in InterceptorEvent.GetInvocationList())
+                {
+                    if (!item.Invoke(service, method, token)) return false;
+                }
+                return true;
             }
-            return true;
+            else return true;
         }
         #endregion
     }

@@ -14,8 +14,6 @@ namespace Material.MySQL
         public IConfigDao configDao;
         public IUserDao userDao;
         public ISkillCardDao skillCardDao;
-        public ICardRepositoryDao cardRepositoryDao;
-        public IFriendDao friendDao;
         private string GetConnString(string ip, string port, string db, string username, string password)
         {
             return $"server={ip};"
@@ -29,10 +27,8 @@ namespace Material.MySQL
         {
             dbConnStr = GetConnString(ip, port, db,username,password);
             userDao = new UserDao(dbConnStr);
-            skillCardDao = new SkillCardDao(dbConnStr);
-            cardRepositoryDao = new CardRepositoryDao(dbConnStr);
             configDao = new ConfigDao(dbConnStr);
-            friendDao = new FriendDao(dbConnStr);
+            skillCardDao = new SkillCardDao(dbConnStr);
         }
     }
 }

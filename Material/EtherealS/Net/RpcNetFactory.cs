@@ -30,7 +30,7 @@ namespace Material.EtherealS.Net
             {
                 try
                 {
-                    socketserver = new SocketListener(config);
+                    socketserver = new SocketListener(host,port,config);
                     for (int i = 0; i < config.NumChannels; i++)
                     {
                         Thread thread = new Thread(() => socketserver.StartAccept(null));

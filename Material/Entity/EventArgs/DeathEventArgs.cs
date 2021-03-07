@@ -1,11 +1,4 @@
-﻿using Make.Model.GameModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Material.Entity.EventArgs
+﻿namespace Material.Entity.EventArgs
 {
     public class DeathEventArgs : System.EventArgs
     {

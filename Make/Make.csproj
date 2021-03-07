@@ -1,14 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="RPC\Request\**" />
-    <EmbeddedResource Remove="RPC\Request\**" />
-    <None Remove="RPC\Request\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="Core.cs" />
@@ -20,6 +14,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Material\Material.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Model\GameModel\GameRoom\RealTime\" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 ﻿using Material.Entity;
-using Material.RPCServer.Annotation;
-using Material.RPCServer.TCP_Async_Event;
+using Material.EtherealS.Annotation;
+using Material.EtherealS.Extension.Authority;
+using Material.EtherealS.Model;
 using Model.GameModel.GameRoom;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,9 @@ using System.Text;
 
 namespace Make.RPC.Service
 {
-    public class PlayerServerService
+    public class PlayerServerService : IAuthoritable
     {
+        public object Authority { get => 1; set { } }
         [RPCService]
         public bool CreateRoom(Player player,List<Team> teams, string roomType)
         {
@@ -39,6 +41,17 @@ namespace Make.RPC.Service
                 }
             }
             return false;
+        }
+
+        [RPCService(Authority = 0)]
+        public bool Login(Player player,string secretKey)
+        {
+            if (secretKey.Equals(Core.Config.SecretKey))
+            {
+                player.Authority = 1;
+                return true;
+            }
+            else return false;
         }
     }
 }

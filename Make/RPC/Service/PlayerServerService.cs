@@ -15,29 +15,26 @@ namespace Make.RPC.Service
         [RPCService]
         public bool CreateRoom(Player player,List<Team> teams, string roomType)
         {
-            if (player.Id == 1)//服务端权限
+            if (Enum.TryParse(roomType, out Room.RoomType type))
             {
-                if (Enum.TryParse(roomType, out Room.RoomType type))
+                if (type == Room.RoomType.Round_Solo)
                 {
-                    if (type == Room.RoomType.Round_Solo)
+                    StringBuilder sb = new StringBuilder();
+                    SoloRoom_Round room = new SoloRoom_Round();
+                    foreach (Team team in teams)
                     {
-                        StringBuilder sb = new StringBuilder();
-                        SoloRoom_Round room = new SoloRoom_Round();
-                        foreach (Team team in teams)
+                        foreach (Player item in team.Teammates.Values)
                         {
-                            foreach (Player item in team.Teammates.Values)
-                            {
-                                sb.Append(item.Id).Append("-");
-                                player.GetTokens().TryRemove(item.Id, out BaseUserToken value);
-                                player.GetTokens().TryAdd(item.Id, item);
-                                item.Room = room;
-                                item.Team = team;
-                            }
+                            sb.Append(item.Id).Append("-");
+                            player.GetTokens().TryRemove(item.Id, out BaseUserToken value);
+                            player.GetTokens().TryAdd(item.Id, item);
+                            item.Room = room;
+                            item.Team = team;
                         }
-                        room.Id = sb.ToString();
-                        teams.ForEach(item => room.Teams.Add(item));
-                        return true;
                     }
+                    room.Id = sb.ToString();
+                    teams.ForEach(item => room.Teams.Add(item));
+                    return true;
                 }
             }
             return false;

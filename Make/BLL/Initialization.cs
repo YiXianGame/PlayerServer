@@ -30,18 +30,21 @@ namespace Make.BLL
             RPCType serverType = new RPCType();
             serverType.Add<int>("Int");
             serverType.Add<string>("String");
-            serverType.Add<bool>("Bool");
+            serverType.Add<bool>("Bool"); 
             serverType.Add<long>("Long");
-            serverType.Add<Player>("Player");   
+            serverType.Add<Player>("Player");
             serverType.Add<CardGroup>("CardGroup");
             serverType.Add<List<Team>>("List<Team>");
+            serverType.Add<List<SkillCard>>("List<SkillCard>");
             RPCNetServiceConfig serviceConfig = new RPCNetServiceConfig(serverType);
             RPCNetRequestConfig requestConfig = new RPCNetRequestConfig(serverType);
-            //适配Server远程客户端服务
+            //适配Server远程客户端服务0
             serviceConfig.Authoritable = true;
             RPCServiceFactory.Register(new PlayerServerService(),"PlayerServer", Core.Config.Ip, Core.Config.Port, serviceConfig);
+            RPCServiceFactory.Register(new LoadService(), "LoadServer", Core.Config.Ip, Core.Config.Port, serviceConfig);
+
             //配置Request远程客户端请求
-            RPCNetRequestFactory.Register<LoadRequest>("RequestClient", Core.Config.Ip, Core.Config.Port, requestConfig);
+            RPCNetRequestFactory.Register<LoadRequest>("LoadClient", Core.Config.Ip, Core.Config.Port, requestConfig);
             //启动Server服务
             RPCNetConfig serverNetConfig = new RPCNetConfig(() => new Player());
             RPCNetFactory.StartServer(Core.Config.Ip,Core.Config.Port, serverNetConfig);

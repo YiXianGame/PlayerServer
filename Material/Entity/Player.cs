@@ -78,6 +78,7 @@ namespace Material.Entity
         #region --Cache属性--
         [JsonIgnore]
         public object Authority { get => authority; set => authority = (int)value; }
+        [JsonIgnore]
         public List<Buff> Buffs { get => buffs; set => buffs = value; }
 
         #endregion
@@ -96,14 +97,6 @@ namespace Material.Entity
             this.cardGroup = player.cardGroup;
             this.room = player.room;
             this.team = player.team;
-            if (player.Team.Teammates.TryGetValue(player.Id, out Player value))
-            {
-                lock (value)//即时游戏，所以要尽可能的将锁原子化
-                {
-                    team.Teammates.Add(player.Id, player);
-                    team.Teammates.Remove(player.Id);
-                }
-            }
         }
 
         public bool Check(IAuthoritable authoritable)

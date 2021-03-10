@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Material.Entity
 {
+    [JsonObject(MemberSerialization.OptOut)]
     public class User
     {
         #region --Enum--

@@ -24,11 +24,19 @@ namespace Make.RPC.Service
                 }
                 else
                 {
-                    if(player.GetToken(player.Id, out Player value))
+                    if(player.GetToken(id, out Player value))
                     {
                         player.SetAttribute(value);
                         player.AddIntoTokens(true);
                         player.Authority = 1;
+                        if (player.Team.Teammates.TryGetValue(player.Id, out Player result))
+                        {
+                            lock (value)//即时游戏，所以要尽可能的将锁原子化
+                            {
+                                player.Team.Teammates.Remove(player.Id);
+                                player.Team.Teammates.Add(player.Id, player);
+                            }
+                        }
                         return player.Room.Teams;
                     }
                     return null;

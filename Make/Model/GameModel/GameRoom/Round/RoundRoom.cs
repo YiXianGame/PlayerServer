@@ -27,13 +27,13 @@ namespace Model.GameModel.GameRoom
                 readyCount++;
                 if(readyCount >= min_players)
                 {
-                    Core.LoadRequest.StartGame(player,teams);
+                    Core.LoadRequest.StartGame();
                     Start_Stage();
                 }
             }
             else
             {
-                Core.LoadRequest.StartGame(player,teams);
+                Core.LoadRequest.StartGame();
             }
             return true;
         }

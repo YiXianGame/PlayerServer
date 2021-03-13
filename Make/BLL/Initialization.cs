@@ -44,7 +44,7 @@ namespace Make.BLL
             RPCServiceFactory.Register(new LoadService(), "LoadServer", Core.Config.Ip, Core.Config.Port, serviceConfig);
 
             //配置Request远程客户端请求
-            RPCNetRequestFactory.Register<LoadRequest>("LoadClient", Core.Config.Ip, Core.Config.Port, requestConfig);
+            Core.LoadRequest = RPCNetRequestFactory.Register<LoadRequest>("LoadClient", Core.Config.Ip, Core.Config.Port, requestConfig);
             //启动Server服务
             RPCNetConfig serverNetConfig = new RPCNetConfig(() => new Player());
             RPCNetFactory.StartServer(Core.Config.Ip,Core.Config.Port, serverNetConfig);

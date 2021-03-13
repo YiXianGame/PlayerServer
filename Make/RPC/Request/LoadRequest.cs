@@ -9,6 +9,6 @@ namespace Make.RPC.Request
     public interface LoadRequest
     {
         [RPCRequest]
-        public void StartGame();
+        public void StartGame(Player player);
     }
 }

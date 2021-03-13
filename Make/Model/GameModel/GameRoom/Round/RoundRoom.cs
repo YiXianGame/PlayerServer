@@ -27,13 +27,18 @@ namespace Model.GameModel.GameRoom
                 readyCount++;
                 if(readyCount >= min_players)
                 {
-                    Core.LoadRequest.StartGame();
+                    teams.ForEach((team)=> { 
+                        foreach(Player item in team.Teammates.Values)
+                        {
+                            Core.LoadRequest.StartGame(item);
+                        }
+                    });
                     Start_Stage();
                 }
             }
             else
             {
-                Core.LoadRequest.StartGame();
+                Core.LoadRequest.StartGame(player);
             }
             return true;
         }

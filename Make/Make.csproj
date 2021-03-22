@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\GameModel\GameRoom\RealTime\" />
+    <Folder Include="Model\GameRoom\Round\" />
   </ItemGroup>
 
 </Project>

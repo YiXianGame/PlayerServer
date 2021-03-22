@@ -2,8 +2,9 @@
 
 namespace Material.EtherealS.Model
 {
-    class RPCException : Exception
+    public class RPCException : Exception
     {
+        int Code;
         public RPCException(string message) : base(message)
         {
 

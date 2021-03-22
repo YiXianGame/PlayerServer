@@ -2,6 +2,7 @@
 using Make.RPC.Service;
 using Material.Entity;
 using Material.Entity.Config;
+using Material.Entity.Frame;
 using Material.EtherealS.Annotation;
 using Material.EtherealS.Extension.Authority;
 using Material.EtherealS.Model;
@@ -20,6 +21,8 @@ namespace Make.BLL
     {
         public Initialization()
         {
+            
+
             Console.WriteLine("Initialization....");
             Redis redis = new Redis("127.0.0.1:6379");
             MySQL mySQL = new MySQL("127.0.0.1", "3306", "yixian", "root", "root");
@@ -27,24 +30,29 @@ namespace Make.BLL
             Core.Repository = repository;
             CoreInit(PlayerServerConfig.PlayerServerCategory.StandardServer);
             #region --RPCServer--
-            RPCType serverType = new RPCType();
-            serverType.Add<int>("Int");
-            serverType.Add<string>("String");
-            serverType.Add<bool>("Bool"); 
-            serverType.Add<long>("Long");
-            serverType.Add<Player>("Player");
-            serverType.Add<CardGroup>("CardGroup");
-            serverType.Add<List<Team>>("List<Team>");
-            serverType.Add<List<SkillCard>>("List<SkillCard>");
-            RPCNetServiceConfig serviceConfig = new RPCNetServiceConfig(serverType);
-            RPCNetRequestConfig requestConfig = new RPCNetRequestConfig(serverType);
+            RPCType type = new RPCType();
+            type.Add<int>("Int");
+            type.Add<string>("String");
+            type.Add<bool>("Bool"); 
+            type.Add<long>("Long");
+            type.Add<Player>("Player");
+            type.Add<FrameGroup>("FrameGroup");
+            type.Add<CardGroup>("CardGroup");
+            type.Add<List<FrameGroup>>("List<FrameGroup>");
+            type.Add<List<Team>>("List<Team>");
+            type.Add<List<long>>("List<Long>");
+            type.Add<List<SkillCard>>("List<SkillCard>");
+            RPCNetServiceConfig serviceConfig = new RPCNetServiceConfig(type);
+            RPCNetRequestConfig requestConfig = new RPCNetRequestConfig(type);
             //适配Server远程客户端服务0
             serviceConfig.Authoritable = true;
             RPCServiceFactory.Register(new PlayerServerService(),"PlayerServer", Core.Config.Ip, Core.Config.Port, serviceConfig);
             RPCServiceFactory.Register(new LoadService(), "LoadServer", Core.Config.Ip, Core.Config.Port, serviceConfig);
-
+            RPCServiceFactory.Register(new GameService(), "GameServer", Core.Config.Ip, Core.Config.Port, serviceConfig);
             //配置Request远程客户端请求
             Core.LoadRequest = RPCNetRequestFactory.Register<LoadRequest>("LoadClient", Core.Config.Ip, Core.Config.Port, requestConfig);
+            Core.GameRequest = RPCNetRequestFactory.Register<GameRequest>("GameClient", Core.Config.Ip, Core.Config.Port, requestConfig);
+
             //启动Server服务
             RPCNetConfig serverNetConfig = new RPCNetConfig(() => new Player());
             RPCNetFactory.StartServer(Core.Config.Ip,Core.Config.Port, serverNetConfig);

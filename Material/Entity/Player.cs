@@ -35,15 +35,15 @@ namespace Material.Entity
         private string password;//用户密码
         private int hp;//血量
         private int mp;//能量
-        private int hp_max;//血量上限
-        private int mp_max;//仙气上限
+        private int hpMax = 100;//血量上限
+        private int mpMax = 100;//仙气上限
         private string title = "炼气";//称号
         private int lv = 1;//等级
         private byte[] headImage;
         private Room room;//房间
         private Team team;//队友
         private CardGroup cardGroup;
-        private List<Buff> buffs = new List<Buff>();
+        private HashSet<Buff> buffs = new HashSet<Buff>();
         #endregion
 
         #region --属性--
@@ -55,8 +55,7 @@ namespace Material.Entity
         public string Password { get => password; set => password = value; }
         public int Hp { get => hp; set => hp = value; }
         public int Mp { get => mp; set => mp = value; }
-        public int Hp_max { get => hp_max; set => hp_max = value; }
-        public int Mp_max { get => mp_max; set => mp_max = value; }
+
         public string Title { get => title; set => title = value; }
         public int Lv { get => lv; set => lv = value; }
         [JsonIgnore]
@@ -67,6 +66,10 @@ namespace Material.Entity
         public Team Team { get => team; set => team = value; }
         public CardGroup CardGroup { get => cardGroup; set => cardGroup = value; }
 
+        [JsonIgnore]
+        public HashSet<Buff> Buffs { get => buffs; set => buffs = value; }
+        public int HpMax { get => hpMax; set => hpMax = value; }
+        public int MpMax { get => mpMax; set => mpMax = value; }
         #endregion
 
         #region --Cache字段--
@@ -78,8 +81,7 @@ namespace Material.Entity
         #region --Cache属性--
         [JsonIgnore]
         public object Authority { get => authority; set => authority = (int)value; }
-        [JsonIgnore]
-        public List<Buff> Buffs { get => buffs; set => buffs = value; }
+
 
         #endregion
 

@@ -2,7 +2,7 @@
 using Material.EtherealS.Annotation;
 using Material.EtherealS.Extension.Authority;
 using Material.EtherealS.Model;
-using Model.GameModel.GameRoom;
+using Model.GameRoom.Round;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,10 +17,10 @@ namespace Make.RPC.Service
         {
             if (Enum.TryParse(roomType, out Room.RoomType type))
             {
-                if (type == Room.RoomType.Round_Solo)
+                if (type == Room.RoomType.RealTimeSolo)
                 {
                     StringBuilder sb = new StringBuilder();
-                    SoloRoom_Round room = new SoloRoom_Round();
+                    RealTimeSoloRoom room = new RealTimeSoloRoom();
                     foreach (Team team in teams)
                     {
                         foreach (Player item in team.Teammates.Values)

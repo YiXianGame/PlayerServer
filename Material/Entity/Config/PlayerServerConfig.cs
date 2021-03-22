@@ -15,6 +15,7 @@ namespace Material.Entity.Config
         string secretKey;
         string ip;
         string port;
+        int frameRate = 60;
         #endregion
 
         #region --属性--
@@ -22,6 +23,7 @@ namespace Material.Entity.Config
         public string SecretKey { get => secretKey; set => secretKey = value; }
         public string Ip { get => ip; set => ip = value; }
         public string Port { get => port; set => port = value; }
+        public int FrameRate { get => frameRate; set => frameRate = value; }
 
         #endregion
     }

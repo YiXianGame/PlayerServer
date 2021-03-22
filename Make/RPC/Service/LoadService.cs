@@ -12,7 +12,7 @@ namespace Make.RPC.Service
         public object Authority { get => 1; set { } }
 
         [RPCService(Authority = 0)]
-        public List<Team> Connect(Player player,long id,string password)
+        public bool Connect(Player player,long id,string password)
         {
             Task<User> task = Core.Repository.UserRepository.Login(id,password);
             task.Wait();
@@ -20,7 +20,7 @@ namespace Make.RPC.Service
             {
                 if(task.Result.Id == -1)
                 {
-                    return null;
+                    return false;
                 }
                 else
                 {
@@ -31,18 +31,19 @@ namespace Make.RPC.Service
                         player.Authority = 1;
                         if (player.Team.Teammates.TryGetValue(player.Id, out Player result))
                         {
-                            lock (value)//即时游戏，所以要尽可能的将锁原子化
+                            lock (value)
                             {
                                 player.Team.Teammates.Remove(player.Id);
                                 player.Team.Teammates.Add(player.Id, player);
                             }
                         }
-                        return player.Room.Teams;
+                        Core.LoadRequest.SyncRoom(player, player.Room.Type.ToString(), player.Room.Teams);
+                        return true;
                     }
-                    return null;
+                    return false;
                 }
             }
-            return null;
+            return false;
         }
         [RPCService]
         public List<SkillCard> SyncSkillCard(Player suer,List<SkillCard> skillCards)

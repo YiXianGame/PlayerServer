@@ -1,4 +1,5 @@
 ﻿using Make.BLL;
+using System;
 
 namespace Pack
 {
@@ -6,8 +7,15 @@ namespace Pack
     {
         static void Main(string[] args)
         {
-            //服务端
-            Initialization initialization = new Initialization();
+            try
+            {
+                //服务端
+                Initialization initialization = new Initialization();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message + "\n" + e.StackTrace);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Material.Entity;
+using Material.Entity.Frame;
 using Material.EtherealS.Annotation;
 using System;
 using System.Collections.Generic;
@@ -6,11 +7,9 @@ using System.Text;
 
 namespace Make.RPC.Request
 {
-    public interface LoadRequest
+    public interface GameRequest
     {
         [RPCRequest]
-        public void StartGame(Player player,int frameRate);
-        [RPCRequest]
-        public void SyncRoom(Player player, string category, List<Team> teams);
+        public void SyncFrame(Player player,FrameGroup frameGroup);
     }
 }

@@ -13,6 +13,7 @@ namespace Make
         private static Dictionary<long, SkillCard> skillCards = new Dictionary<long, SkillCard>();
         private static Model.Repository repository;
         private static LoadRequest loadRequest;
+        private static GameRequest gameRequest;
         #endregion
 
         #region --属性--
@@ -20,6 +21,8 @@ namespace Make
         public static PlayerServerConfig Config { get => config; set => config = value; }
         public static Dictionary<long, SkillCard> SkillCards { get => skillCards; set => skillCards = value; }
         public static LoadRequest LoadRequest { get => loadRequest; set => loadRequest = value; }
+        public static GameRequest GameRequest { get => gameRequest; set => gameRequest = value; }
+
         #endregion
 
     }

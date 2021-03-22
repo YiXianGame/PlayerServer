@@ -10,7 +10,6 @@ namespace Material.EtherealS.Request
     public class RPCNetRequestProxy : DispatchProxy
     {
         private string servicename;
-        RPCType type;
         RPCNetRequestConfig config;
         public static RPCNetRequestProxy Register<T>(string servicename, RPCNetRequestConfig config)
         {
@@ -30,7 +29,7 @@ namespace Material.EtherealS.Request
                 int param_count;
                 if (args != null) param_count = args.Length;
                 else param_count = 0;
-                if (param_count > 1)
+                if (param_count > 0)
                 {
                     if (rpcAttribute.Paramters == null)
                     {
@@ -39,7 +38,7 @@ namespace Material.EtherealS.Request
                         {
                             try
                             {
-                                methodid.Append("-" + type.AbstractName[args[i].GetType()]);
+                                methodid.Append("-" + config.Type.AbstractName[args[i].GetType()]);
                                 obj[i - 1] = JsonConvert.SerializeObject(args[i]);
                             }
                             catch (Exception)
@@ -56,9 +55,9 @@ namespace Material.EtherealS.Request
                             obj = new string[param_count - 1];
                             for (int i = 1; i < param_count; i++)
                             {
-                                if (type.AbstractType.ContainsKey(types_name[i]))
+                                if (config.Type.AbstractType.ContainsKey(types_name[i]))
                                 {
-                                    methodid.Append("-" + type.AbstractName[args[i].GetType()]);
+                                    methodid.Append("-" + config.Type.AbstractName[args[i].GetType()]);
                                     obj[i - 1] = JsonConvert.SerializeObject(args[i]);
                                 }
                                 else throw new RPCException($"C#对应的{types_name[i]}-{args[i].GetType()}类型参数尚未注册");
@@ -75,7 +74,7 @@ namespace Material.EtherealS.Request
                     return null;
                 }
                 else return null;// throw new RPCException($"方法体:{methodid} 执行时，缺少首参数BaseUserToken，请检查是否传参错误！");
-            }
+            } 
             else return targetMethod.Invoke(this, args);
         }
     }

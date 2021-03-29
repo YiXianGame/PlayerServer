@@ -57,6 +57,7 @@ namespace Make.BLL
             RPCNetConfig serverNetConfig = new RPCNetConfig(() => new Player());
             RPCNetFactory.StartServer(Core.Config.Ip,Core.Config.Port, serverNetConfig);
             serverNetConfig.InterceptorEvent += AuthorityCheck.ServiceCheck;
+            
             #endregion
             SkillCardInit();
             Console.WriteLine("Initialization Sucess!");

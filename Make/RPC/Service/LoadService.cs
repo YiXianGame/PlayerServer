@@ -46,29 +46,23 @@ namespace Make.RPC.Service
             return false;
         }
         [RPCService]
-        public List<SkillCard> SyncSkillCard(Player suer,List<SkillCard> skillCards)
+        public List<SkillCard> SyncSkillCard(Player player)
         {
-            List<SkillCard> refresh = new List<SkillCard>();
-            if (skillCards != null)
+            HashSet<SkillCard> skillCards = new HashSet<SkillCard>();
+            foreach(Team team in player.Room.Teams)
             {
-                foreach (SkillCard skillCard in skillCards)
+                foreach(Player item in player.Team.Teammates.Values)
                 {
-                    if (Core.SkillCards.TryGetValue(skillCard.Id, out SkillCard value))
+                    foreach(long id in item.CardGroup.Cards)
                     {
-                        if (value.AttributeUpdate != skillCard.AttributeUpdate)
+                        if(Core.SkillCards.TryGetValue(id, out SkillCard skillCard))
                         {
-                            refresh.Add(value);
+                            if(!skillCards.Contains(skillCard))skillCards.Add(skillCard);
                         }
                     }
-                    else
-                    {
-                        skillCard.AttributeUpdate = -2;//需要删掉
-                        refresh.Add(skillCard);
-                    }
                 }
-                return refresh;
             }
-            else return null;
+            return new List<SkillCard>(skillCards);
         }
         [RPCService]
         public void SyncSkillCardSuccess(Player player)

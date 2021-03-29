@@ -9,14 +9,9 @@ namespace Model.GameRoom.Round
 {
     public abstract class RealTimeRoom : Room
     {
-        public override bool Action(Player player)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void Action_Stage()
         {
-            stage = RoomStage.Action;
+
         }
         public override bool Enter(Player player)
         {
@@ -31,7 +26,7 @@ namespace Model.GameRoom.Round
                     teams.ForEach((team) => {
                         foreach (Player item in team.Teammates.Values)
                         {
-                            Core.LoadRequest.StartGame(item,Core.Config.FrameRate);
+                            Core.LoadRequest.StartGame(item,Core.Config.FrameRate,randomSeed);
                         }
                     });
                     Start_Stage();
@@ -39,7 +34,7 @@ namespace Model.GameRoom.Round
             }
             else
             {
-                Core.LoadRequest.StartGame(player,Core.Config.FrameRate);
+                Core.LoadRequest.StartGame(player,Core.Config.FrameRate,randomSeed);
             }
             return true;
         }
@@ -60,13 +55,12 @@ namespace Model.GameRoom.Round
                 nowFrameGroup = frameGroup;
             }
         }
-        public override bool Force_Close()
+        public override void Close_Stage()
         {
             teams.ForEach((item) =>
             {
                 item.Foreach(player => Leave(player));
             });
-            return true;
         }
 
         public override bool Leave(Player player)
@@ -82,17 +76,16 @@ namespace Model.GameRoom.Round
 
         public override void Raise_Stage()
         {
-            stage = RoomStage.Raise;
+
         }
 
         public override void Result_Stage()
         {
-            stage = RoomStage.Result;
+
         }
 
         public override void Start_Stage()
         {
-            stage = RoomStage.Start;
             timer = new Timer(SyncFrame, null, 0, Core.Config.FrameRate);
         }
     }

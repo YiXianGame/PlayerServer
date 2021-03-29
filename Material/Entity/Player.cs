@@ -106,6 +106,10 @@ namespace Material.Entity
             return (int)Authority >= (int)authoritable.Authority;
         }
 
+        public override void OnDisConnect()
+        {
+            base.OnDisConnect();
+        }
         #endregion
     }
 }

@@ -31,9 +31,9 @@ namespace Material.Entity
         protected long attributeUpdate;
         protected List<Buff> auxiliaryBuff = new List<Buff>();//状态
         protected List<Buff> enemyBuff = new List<Buff>();//状态
-        protected List<SkillCardCategory> category = new List<SkillCardCategory>();
-        List<User> enemy = new List<User>();
-        List<User> auxiliary = new List<User>();
+        protected SkillCardCategory category = SkillCardCategory.Attack;
+        protected List<User> enemy = new List<User>();
+        protected List<User> auxiliary = new List<User>();
         #endregion
 
         #region --属性--
@@ -53,12 +53,11 @@ namespace Material.Entity
         public long AttributeUpdate { get => attributeUpdate; set => attributeUpdate = value; }
         public List<Buff> AuxiliaryBuff { get => auxiliaryBuff; set => auxiliaryBuff = value; }
         public List<Buff> EnemyBuff { get => enemyBuff; set => enemyBuff = value; }
-        public List<SkillCardCategory> Category { get => category; set => category = value; }
-
         [JsonIgnore]
         public List<User> Enemy { get => enemy; set => enemy = value; }
         [JsonIgnore]
         public List<User> Auxiliary { get => auxiliary; set => auxiliary = value; }
+        public SkillCardCategory Category { get => category; set => category = value; }
         #endregion
     }
 }

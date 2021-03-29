@@ -45,14 +45,6 @@ namespace Material.EtherealS.Net
                     Console.WriteLine(e.Message + "\n" + e.StackTrace);
                     socketserver.Dispose();
                 }
-                catch(RPCException e)
-                {
-                    Console.WriteLine(e.Message + "\n" + e.StackTrace);
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine(e.Message + "\n" + e.StackTrace);
-                }
             }
             return socketserver;
         }

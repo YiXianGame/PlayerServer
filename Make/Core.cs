@@ -1,6 +1,7 @@
 ﻿using Make.RPC.Request;
 using Material.Entity;
 using Material.Entity.Config;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
@@ -14,6 +15,7 @@ namespace Make
         private static Model.Repository repository;
         private static LoadRequest loadRequest;
         private static GameRequest gameRequest;
+        private static Random random = new Random((int)(Material.Utils.TimeStamp.Now() % 2147483640));
         #endregion
 
         #region --属性--
@@ -22,6 +24,7 @@ namespace Make
         public static Dictionary<long, SkillCard> SkillCards { get => skillCards; set => skillCards = value; }
         public static LoadRequest LoadRequest { get => loadRequest; set => loadRequest = value; }
         public static GameRequest GameRequest { get => gameRequest; set => gameRequest = value; }
+        public static Random Random { get => random; set => random = value; }
 
         #endregion
 

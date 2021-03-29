@@ -16,22 +16,35 @@ namespace Make.RPC.Service
         [RPCService]
         public bool Action(Player player,long skillCardId,List<long> selects)
         {
-            ActionFrame frame = new ActionFrame();
+            Frame frame = new Frame();
             frame.OwnerId = player.Id;
             frame.Selects = selects;
             frame.SkillCardId = skillCardId;
+            frame.Category = Frame.FrameCategory.ActionFrame;
             lock (player.Room){
                 player.Room.NowFrameGroup.Frames.Add(frame);
-                return true;
             }
+            return true;
         }
         [RPCService]
         public List<FrameGroup> SyncFrame(Player player,long start,long end)
         {
-            if (start % Core.Config.FrameRate == 0 && end % Core.Config.FrameRate == 0)
+            //null 请求失败或不存在该帧，存在List即存在该帧
+            if (start >=0 && end>=0 && start < end && start % Core.Config.FrameRate == 0 && end % Core.Config.FrameRate == 0 && player.Room.NowFrameGroup.Timestamp  >= start && player.Room.NowFrameGroup.Timestamp >= end)
             {
                 List<FrameGroup> frameGroups = new List<FrameGroup>();
-
+                for (int i = 0; i < player.Room.HistoryFrameGroups.Count; i++)
+                {
+                    if (player.Room.HistoryFrameGroups[i].Timestamp >= start)
+                    {
+                        if (player.Room.HistoryFrameGroups[i].Timestamp < end)
+                        {
+                            frameGroups.Add(player.Room.HistoryFrameGroups[i]);
+                        }
+                        else break;
+                    }
+                    else continue;
+                }
                 return frameGroups;
             }
             return null;

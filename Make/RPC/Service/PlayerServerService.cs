@@ -21,6 +21,7 @@ namespace Make.RPC.Service
                 {
                     StringBuilder sb = new StringBuilder();
                     RealTimeSoloRoom room = new RealTimeSoloRoom();
+                    room.RandomSeed = Core.Random.Next();
                     foreach (Team team in teams)
                     {
                         foreach (Player item in team.Teammates.Values)

@@ -3,17 +3,10 @@ using Make.RPC.Service;
 using Material.Entity;
 using Material.Entity.Config;
 using Material.Entity.Frame;
-using Material.EtherealS.Annotation;
-using Material.EtherealS.Extension.Authority;
-using Material.EtherealS.Model;
-using Material.EtherealS.Net;
-using Material.EtherealS.Request;
-using Material.EtherealS.Service;
 using Material.MySQL;
 using Material.Redis;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace Make.BLL
 {
@@ -30,39 +23,70 @@ namespace Make.BLL
             Core.Repository = repository;
             CoreInit(PlayerServerConfig.PlayerServerCategory.StandardServer);
             #region --RPCServer--
-            RPCType type = new RPCType();
-            type.Add<int>("Int");
-            type.Add<string>("String");
-            type.Add<bool>("Bool"); 
-            type.Add<long>("Long");
-            type.Add<Player>("Player");
-            type.Add<FrameGroup>("FrameGroup");
-            type.Add<CardGroup>("CardGroup");
-            type.Add<List<FrameGroup>>("List<FrameGroup>");
-            type.Add<List<Team>>("List<Team>");
-            type.Add<List<long>>("List<Long>");
-            type.Add<List<SkillCard>>("List<SkillCard>");
-            RPCNetServiceConfig serviceConfig = new RPCNetServiceConfig(type);
-            RPCNetRequestConfig requestConfig = new RPCNetRequestConfig(type);
-            //适配Server远程客户端服务0
-            serviceConfig.Authoritable = true;
-            RPCServiceFactory.Register(new PlayerServerService(),"PlayerServer", Core.Config.Ip, Core.Config.Port, serviceConfig);
-            RPCServiceFactory.Register(new LoadService(), "LoadServer", Core.Config.Ip, Core.Config.Port, serviceConfig);
-            RPCServiceFactory.Register(new GameService(), "GameServer", Core.Config.Ip, Core.Config.Port, serviceConfig);
-            //配置Request远程客户端请求
-            Core.LoadRequest = RPCNetRequestFactory.Register<LoadRequest>("LoadClient", Core.Config.Ip, Core.Config.Port, requestConfig);
-            Core.GameRequest = RPCNetRequestFactory.Register<GameRequest>("GameClient", Core.Config.Ip, Core.Config.Port, requestConfig);
+            //Types
+            EtherealS.Model.RPCTypeConfig types = new EtherealS.Model.RPCTypeConfig();
+            types.Add<int>("Int");
+            types.Add<string>("String");
+            types.Add<bool>("Bool"); 
+            types.Add<long>("Long");
+            types.Add<Player>("Player");
+            types.Add<FrameGroup>("FrameGroup");
+            types.Add<CardGroup>("CardGroup");
+            types.Add<List<FrameGroup>>("List<FrameGroup>");
+            types.Add<List<Team>>("List<Team>");
+            types.Add<List<long>>("List<Long>");
+            types.Add<List<SkillCard>>("List<SkillCard>");
+            //Service
+            EtherealS.RPCService.ServiceConfig serviceConfig = new EtherealS.RPCService.ServiceConfig(types);
+            serviceConfig.InterceptorEvent += EtherealS.Extension.Authority.AuthorityCheck.ServiceCheck;
+            serviceConfig.ExceptionEvent += OnExceptionEvent;
+            serviceConfig.LogEvent += LogEvent;
+            EtherealS.RPCService.Service service = EtherealS.RPCService.ServiceCore.Register(new PlayerServerService(),Core.Config.Ip, Core.Config.Port, "PlayerServer", serviceConfig);
 
-            //启动Server服务
-            RPCNetConfig serverNetConfig = new RPCNetConfig(() => new Player());
-            RPCNetFactory.StartServer(Core.Config.Ip,Core.Config.Port, serverNetConfig);
-            serverNetConfig.InterceptorEvent += AuthorityCheck.ServiceCheck;
-            
+            EtherealS.RPCService.ServiceCore.Register(new LoadService(), Core.Config.Ip, Core.Config.Port, "LoadServer", serviceConfig);
+            EtherealS.RPCService.ServiceCore.Register(new GameService(), Core.Config.Ip, Core.Config.Port, "GameServer", serviceConfig);
+            //Request
+            EtherealS.RPCRequest.RequestConfig requestConfig = new EtherealS.RPCRequest.RequestConfig(types);
+            requestConfig.ExceptionEvent += OnExceptionEvent;
+            requestConfig.LogEvent += LogEvent;
+            Core.LoadRequest = EtherealS.RPCRequest.RequestCore.Register<LoadRequest>(Core.Config.Ip, Core.Config.Port, "LoadClient", requestConfig);
+            Core.GameRequest = EtherealS.RPCRequest.RequestCore.Register<GameRequest>(Core.Config.Ip, Core.Config.Port, "GameClient", requestConfig);
+            //Net
+            EtherealS.RPCNet.NetConfig netConfig = EtherealS.RPCNet.NetCore.Register(Core.Config.Ip, Core.Config.Port);
+            netConfig.ExceptionEvent += OnExceptionEvent;
+            netConfig.LogEvent += LogEvent;
+            //Native-Server
+            EtherealS.NativeServer.ServerConfig serverConfig = new EtherealS.NativeServer.ServerConfig(() => new Player());
+            serverConfig.ExceptionEvent += OnExceptionEvent;
+            serverConfig.LogEvent += LogEvent;
+            EtherealS.NativeServer.ServerCore.Register(Core.Config.Ip, Core.Config.Port, serverConfig).Start();
             #endregion
             SkillCardInit();
             Console.WriteLine("Initialization Sucess!");
         }
-        
+
+        private void LogEvent(EtherealS.Model.RPCLog log)
+        {
+            Console.WriteLine(log.Message);
+        }
+
+        private void OnExceptionEvent(Exception exception)
+        {
+            try
+            {
+                throw exception;
+            }
+            catch (EtherealS.Model.RPCException e)
+            {
+                Console.WriteLine($"错误类型:{e.Error}-{e.Message}");
+                Console.WriteLine(e.StackTrace);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+
         private async void CoreInit(PlayerServerConfig.PlayerServerCategory category)
         {
             Console.WriteLine("Core Loading....");

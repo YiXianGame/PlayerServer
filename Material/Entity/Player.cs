@@ -1,6 +1,6 @@
-﻿using Material.Entity.EventArgs;
-using Material.EtherealS.Extension.Authority;
-using Material.EtherealS.Model;
+﻿using EtherealS.Extension.Authority;
+using EtherealS.Model;
+using Material.Entity.EventArgs;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;

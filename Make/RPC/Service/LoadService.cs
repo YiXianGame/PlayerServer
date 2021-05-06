@@ -1,7 +1,6 @@
-﻿using Material.Entity;
-using Material.EtherealS.Annotation;
-using Material.EtherealS.Extension.Authority;
-using Material.EtherealS.Model;
+﻿using EtherealS.Attribute;
+using EtherealS.Extension.Authority;
+using Material.Entity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -27,7 +26,7 @@ namespace Make.RPC.Service
                     if(player.GetToken(id, out Player value))
                     {
                         player.SetAttribute(value);
-                        player.AddIntoTokens(true);
+                        player.Register(true);
                         player.Authority = 1;
                         if (player.Team.Teammates.TryGetValue(player.Id, out Player result))
                         {
